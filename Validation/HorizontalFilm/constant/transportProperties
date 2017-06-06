@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.6                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// water at saturation pressure 0.130 Mpa
+phaseChange true;
+
+phaseChangeTwoPhaseMixture Hardt;//
+
+pSat             pSat       [1 -1 -2 0 0 0 0]   1.00E+006;
+
+TSat             TSat       [0 0  0  1 0 0 0]    453.03;// saturation Temperature 
+R            	 R          [0 2 -2 -1 0 0 0]    461.0; //
+TSatLocal        false;
+
+Hfg		Hfg	    [0 2 -2 0 0 0 0]     2014580;// J/kg
+sigma           sigma       [1 0 -2 0 0 0 0]     0.042217;
+
+phase1 //liquid
+{
+    transportModel Newtonian;
+    nu              nu  [0 2 -1 0 0 0 0]  1.69E-007;
+    rho             rho [1 -3 0 0 0 0 0]  887.13;
+    C		    C   [0 2 -2 -1 0 0 0] 4.40E+003;
+    K		    K   [1 1 -3 -1 0 0 0] 0.6733;
+}
+
+phase2//vapor
+{
+  transportModel Newtonian;
+    nu              nu [0 2 -1 0 0 0 0]  2.92E-006; 
+    rho             rho [1 -3 0 0 0 0 0] 5.145;
+    C		    C [0 2 -2 -1 0 0 0]  4.40E+003;//2.71E+003; Cpg=CpL
+    K		    K  [1 1 -3 -1 0 0 0] 0.0364;
+}
+
+HardtCoeffs
+{
+  
+  Cv            Cv   [0 0 0 0 0 0 0]    1; 
+  rv            rv   [0 0 0 0 0 0 0]    0;
+  rc            rc   [0 0 0 0 0 0 0]    1;
+ 
+}
+
+LeeCoeffs
+{
+  rv            rv   [0 0 -1 0 0 0 0]    0;
+  rc            rc   [0 0 -1 0 0 0 0]    1E5;
+}
+	
+FourierCoeffs
+{
+  
+  r            r   [0 0 0 0 0 0 0]    1E5; 
+  type	       invLinear;//
+}
+
+// ************************************************************************* //

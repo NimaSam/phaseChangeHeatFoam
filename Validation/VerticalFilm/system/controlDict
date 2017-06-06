@@ -1,0 +1,98 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.6                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application                interPhaseChangeFoam;
+
+startFrom                  latestTime;
+
+startTime                  0;
+
+stopAt                     endTime;
+
+endTime                    1;
+
+deltaT                     1e-08;
+
+writeControl               adjustableRunTime;
+
+writeInterval              0.1;
+
+purgeWrite                 0;
+
+writeFormat                ascii;
+
+writePrecision             6;
+
+writeCompression           compressed;
+
+timeFormat                 general;
+
+runTimeModifiable          yes;
+
+adjustTimeStep             on;
+
+maxCo                      1.0;
+maxAlphaCo      	   0.5;
+
+maxDeltaT       1E-05;
+
+
+libs (
+    "libOpenFOAM.so" // keeps paraFoam happy
+    "libsimpleSwakFunctionObjects.so"  
+);
+
+functions
+(
+
+HeatCoef
+{
+type swakExpression;
+valueType patch;
+patchName down;
+verbose true;
+variables (
+	"Tsat=646;"
+	"KL=0.545;" //
+	);
+expression "KL*snGrad(T)";
+accumulations (
+        min
+	max
+        average
+	);
+}
+
+Nu
+{
+type swakExpression;
+valueType patch;
+patchName down;
+verbose true;
+variables (
+	"Tsat=646;"
+	);
+expression "(0.01-pos().y)*snGrad(T)/(T-Tsat+1E-08)";
+accumulations (
+        min
+	max
+        average
+	);
+}
+
+); 
+
+// ************************************************************************* //

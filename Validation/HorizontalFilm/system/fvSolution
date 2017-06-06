@@ -1,0 +1,85 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.1.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    alpha1
+    {
+        maxUnboundedness 1e-5;
+        CoCoeff          2;
+        maxIter          5;
+        nLimiterIter     2;
+
+        solver           PBiCG;
+        preconditioner   DILU;
+        tolerance        1e-12;
+        relTol           0.1;
+    };
+
+    "(U|UFinal)"
+    {
+        solver           PBiCG;
+        preconditioner   DILU;
+        tolerance        1e-09;
+        relTol           0;
+    };
+    "(p|p_rgh)"
+    {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-10;
+        relTol          0;
+    };
+    pcorr
+    {
+        $p;
+        relTol           0;
+    };
+
+    "(pFinal|p_rghFinal)"
+     {
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-10;
+        relTol          0;
+    };
+    "(T|TFinal)"   //add
+    {
+        solver           PBiCG;
+        preconditioner   DILU;
+        tolerance        1e-8;
+        relTol           0;
+    };
+}
+
+"(PISO|PIMPLE)"
+{
+    momentumPredictor          yes;
+    nOuterCorrectors           1;
+    nCorrectors                3;
+    nNonOrthogonalCorrectors   0;
+    
+    nAlphaCorr                 1;
+    nAlphaSubCycles            4;
+    cAlpha                     1;
+
+
+
+    smoothItr                 2;
+    kSmoothItr                0;
+}
+
+// ************************************************************************* //

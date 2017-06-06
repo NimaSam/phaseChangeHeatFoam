@@ -1,0 +1,75 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     |
+#   \\  /    A nd           | Copyright (C) 2011 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#-------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     createGraphs
+#
+# Description
+#     Creates .eps graphs of OpenFOAM results vs experiment for the buoyant
+#     cavity case
+#
+#------------------------------------------------------------------------------
+
+createEpsT()
+{
+    OF=$1
+    EXPT=$2
+
+    gnuplot<<EOF
+    set terminal postscript eps color enhanced
+    set output "OF.eps"
+    set xlabel "Time, [sec]"
+    set ylabel "vapor film Thickness, [m]"
+    set grid
+    set key left top
+    set size 0.6, 0.6
+    set xrange [0:5]
+    set yrange [0:0.0004]
+    plot \
+        "$OF" u 1:2 title "Present Simulation" with lines linetype -1, \
+        "$EXPT" u 1:2  title "Exact Solution" with points lt 1 pt 6
+       
+EOF
+}
+
+
+# test if gnuplot exists on the system
+type -P gnuplot &>/dev/null || {
+    echo "gnuplot not found - skipping graph creation" >&2
+    exit 1
+}
+
+
+# paths to data
+OFDATAROOT=../swakExpression_interfacePosition/0/interfacePosition
+
+EXPTDATAROOT=./ExactData/case1.csv
+
+OF="$OFDATAROOT"
+EXPT="$EXPTDATAROOT"
+# generate temperature profiles
+createEpsT $OF $EXPT
+
+
+#------------------------------------------------------------------------------
