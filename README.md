@@ -16,7 +16,7 @@ cd Application
 ```
 
 ## documentation
-It includes published Papers and phd Thesis [in Persian] 
+It includes published papers and Ph.D Thesis [in Persian] 
 
 
 ## References
