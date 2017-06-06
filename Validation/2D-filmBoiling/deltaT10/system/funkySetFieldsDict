@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.6                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+version 2.0;
+format ascii;
+class dictionary;
+object funkySetFieldsDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// lc2D = critical length base on Reighly instability for 2D
+// lc2D = 2*pi*sqrt(3*sigma/g(rhoL-rhoG))
+// lc3D = sqrt(2)*lc2D
+
+
+//initial vapor position (for 3D)
+//y0 = yc + epsilon (cos (2*pi*x/w) + cos (2*pi*z/w))
+//y0 = 0.125*lc3D + (-0.05*lc3D)(cos (2*pi*x/lc3D) + cos (2*pi*z/lc3D))
+
+//initial vapor position (for 2D) 
+//y0 = yc + epsilon (cos (2*pi*x/w))
+//y0 = 0.125*lc2D + (-0.05*lc2D)(cos (2*pi*x/lc2D))
+
+// yc = unperturbed film 
+// epsilon = perturbation film
+// w = perturbation wave 
+
+//intital Temperature disturbition in vapor is linearly
+// T = (y/yint)[Tsat - Twall] + Twall
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// lc2D = 0.0023003957  --> lc3D = 0.0032532508
+expressions
+(
+	internalFields 
+	{
+	field	alpha1;		
+	expression "pos().y < 4/128*0.0023 + (1.0/128*0.0023)*cos(2*pi*pos().x/0.0023) ? 0.0 : 1.0";	
+	keepPatches	1;
+	}
+
+/*	internalFields 
+	{
+	field	T;		
+	expression "pos().y < 4/128*0.0023 + (1.0/128*0.0023)*cos(2*pi*pos().x/0.0023) ? -5*pos().y / (0.06*0.0023 + (-0.05*0.0023)*cos(2*pi*pos().x/0.0023)) + 656 : 646";	
+	keepPatches	1;
+	}
+*/
+);
