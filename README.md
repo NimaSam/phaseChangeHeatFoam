@@ -1,5 +1,5 @@
 # phaseChangeHeatFoam
-This a solver for boiling and condensation which is written based on OpenFOAM-220 solver (interFoam).
+This is a solver for boiling and condensation which is written based on OpenFOAM-220 solver (interFoam).
 ## key features
 * track interface using VOF method which is improved with Lafaurie smoothing filter
 * consider two mass transfer models (Lee and Tanasawa)
@@ -11,11 +11,12 @@ This a solver for boiling and condensation which is written based on OpenFOAM-22
 
 ## installation
 ```bash
-cd phaseChangeHeatFoam
+cd Application
 ./Allwmake
 ```
 
 ## documentation
+It includes published Papers and phd Thesis [in Persian] 
 
 
 ## References
