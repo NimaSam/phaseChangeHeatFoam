@@ -9,13 +9,13 @@ This is a solver for boiling and condensation which is written based on OpenFOAM
   (iii) the film condensation on a horizontal plate, 
   (iv) the laminar film condensation over a vertical plate
 
-## installation
+## Installation
 ```bash
 cd Application
 ./Allwmake
 ```
 
-## documentation
+## Documentation
 It includes published papers and Ph.D Thesis [in Persian] 
 
 
