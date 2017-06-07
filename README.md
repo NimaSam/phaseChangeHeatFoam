@@ -10,8 +10,11 @@ This is a solver for boiling and condensation which is written based on OpenFOAM
   (iv) the laminar film condensation over a vertical plate
 
 ## Installation
+It is working on OpenFOAM-2.2.0
 ```bash
-cd Application
+git clone https://github.com/NimaSam/phaseChangeHeatFoam/
+cd phaseChangeHeatFoam/Application/
+chmod +x All*
 ./Allwmake
 ```
 
