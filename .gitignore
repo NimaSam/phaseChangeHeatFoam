@@ -1,6 +1,7 @@
 # OpenFOAM build products
 platforms/
 build/
+**/Make/*/
 lnInclude/
 *.dep
 *.o
