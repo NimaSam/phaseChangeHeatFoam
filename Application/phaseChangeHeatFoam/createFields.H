@@ -69,6 +69,8 @@
 
     #include "createPhi.H"
 
+#include "readTransportProperties.H"
+
     Info<< "Creating phaseChangeTwoPhaseMixture\n" << endl;
     autoPtr<phaseChangeTwoPhaseMixture> twoPhaseProperties =
         phaseChangeTwoPhaseMixture::New(U, phi);
@@ -103,7 +105,7 @@
 
     // Construct interface from alpha1 distribution
     //interfaceProperties interface(alpha1, U, twoPhaseProperties());
-    smoothInterfaceProperties interface(alpha1, U, twoPhaseProperties());
+    smoothInterfaceProperties interface(alpha1, U, transportPropertiesDict);
 
     // Construct incompressible turbulence model
     autoPtr<incompressible::turbulenceModel> turbulence
@@ -140,7 +142,7 @@
     }
 
 
-    fv::IOoptionList fvOptions(mesh); //add
+    fv::options fvOptions(mesh); //add
 
     surfaceScalarField rhoPhi
     (
@@ -153,8 +155,6 @@
     		mesh,
     		dimensionedScalar("0", dimMass/dimTime, 0)
     );
-
-#include "readTransportProperties.H"
 
     Info<< "Creating field kinetic energy K\n" << endl;
         volScalarField K("K", 0.5*magSqr(U));

@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "smoothInterfaceProperties.H"
-#include "alphaContactAngleFvPatchScalarField.H"
+#include "alphaContactAngleTwoPhaseFvPatchScalarField.H"
 #include "mathematicalConstants.H"
 #include "surfaceInterpolate.H"
 #include "fvcDiv.H"
@@ -47,23 +47,23 @@ const Foam::scalar Foam::smoothInterfaceProperties::convertToRad =
 
 void Foam::smoothInterfaceProperties::correctContactAngle
 (
-    surfaceVectorField::GeometricBoundaryField& nHatb,
-    surfaceVectorField::GeometricBoundaryField& gradAlphaf
+    surfaceVectorField::Boundary& nHatb,
+    const surfaceVectorField::Boundary& gradAlphaf
 ) const
 {
     const fvMesh& mesh = alpha1_.mesh();
-    const volScalarField::GeometricBoundaryField& abf = alpha1_.boundaryField();
+    const volScalarField::Boundary& abf = alpha1_.boundaryField();
 
     const fvBoundaryMesh& boundary = mesh.boundary();
 
     forAll(boundary, patchi)
     {
-        if (isA<alphaContactAngleFvPatchScalarField>(abf[patchi]))
+        if (isA<alphaContactAngleTwoPhaseFvPatchScalarField>(abf[patchi]))
         {
-            alphaContactAngleFvPatchScalarField& acap =
-                const_cast<alphaContactAngleFvPatchScalarField&>
+            alphaContactAngleTwoPhaseFvPatchScalarField& acap =
+                const_cast<alphaContactAngleTwoPhaseFvPatchScalarField&>
                 (
-                    refCast<const alphaContactAngleFvPatchScalarField>
+                    refCast<const alphaContactAngleTwoPhaseFvPatchScalarField>
                     (
                         abf[patchi]
                     )
@@ -135,7 +135,7 @@ void Foam::smoothInterfaceProperties::calculateK()
 
     // Face unit interface normal
     surfaceVectorField nHatfv(gradAlphaf/(mag(gradAlphaf) + deltaN_));
-    correctContactAngle(nHatfv.boundaryField(), gradAlphaf.boundaryField());
+    correctContactAngle(nHatfv.boundaryFieldRef(), gradAlphaf.boundaryField());
 
     // Face unit interface normal flux
     nHatf_ = nHatfv & Sf;

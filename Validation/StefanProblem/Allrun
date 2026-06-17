@@ -6,15 +6,14 @@ cd ${0%/*} || exit 1    # run from this directory
 
 
 
-blockMesh 
+blockMesh
 
 #refresh alpha1 
 cp 0/alpha1.org 0/alpha1
 cp 0/T.org 0/T
 
-# creat non-uniform internalField
-#setFields > log.setFields
-funkySetFields -time 0 > log.funkySetFields
+# create non-uniform internalField
+setFields > log.setFields
 
 #solve problem in serial
 phaseChangeHeatFoam
@@ -22,7 +21,5 @@ phaseChangeHeatFoam
 paraFoam -touchAll
 
 ( cd validation && ./createGraphs ) 
-
-cd ../
 
 # ----------------------------------------------------------------- end-of-file

@@ -57,33 +57,33 @@
 
         if (phaseChange){
   //      	Info << "solve alphaEqn1" << endl;
-        	/*MULES::implicitSolve
-        	        	(
-        	            geometricOneField(),
-        	            alpha1,
-        	            phi,
-        	            phiAlpha,
-        	            Sp,
-        	            Su,
-        	            1,
-        	            0
-        	        	);
-        	        	*/
-        	MULES::explicitSolve
-        	        (
-        	            geometricOneField(),
-        	            alpha1,
-        	            phi,
-        	            phiAlpha,
-        	            Sp,
-        	            Su,
-        	            1,
-        	            0
-        	        );
+            /*MULES::implicitSolve
+                    (
+                    geometricOneField(),
+                    alpha1,
+                    phi,
+                    phiAlpha,
+                    Sp,
+                    Su,
+                    oneField(),
+                    zeroField()
+                    );
+                    */
+            MULES::explicitSolve
+            (
+                geometricOneField(),
+                alpha1,
+                phi,
+                phiAlpha,
+                Sp,
+                Su,
+                oneField(),
+                zeroField()
+            );
         }
         else
         {
-        	MULES::explicitSolve(alpha1, phi, phiAlpha, 1, 0);
+            MULES::explicitSolve(geometricOneField(), alpha1, phiAlpha);
         }
        // Info << "solve alphaEqn1" << endl;
         rhoPhi +=

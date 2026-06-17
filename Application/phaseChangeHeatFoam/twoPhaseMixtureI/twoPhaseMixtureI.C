@@ -62,7 +62,17 @@ twoPhaseMixtureI::twoPhaseMixtureI
     const word& alpha1Name
 )
 :
-    transportModel(U, phi),
+    IOdictionary
+    (
+        IOobject
+        (
+            "transportProperties",
+            U.time().constant(),
+            U.db(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE
+        )
+    ),
 
     phase1Name_("phase1"),
     phase2Name_("phase2"),
@@ -113,7 +123,7 @@ twoPhaseMixtureI::twoPhaseMixtureI
             U_.db()
         ),
         U_.mesh(),
-        dimensionedScalar("nu", dimensionSet(0, 2, -1, 0, 0), 0),
+        dimensionedScalar(dimViscosity, Zero),
         calculatedFvPatchScalarField::typeName
     )
 {
@@ -136,6 +146,12 @@ tmp<volScalarField> twoPhaseMixtureI::mu() const
           + (scalar(1) - limitedAlpha1)*rho2_*nuModel2_->nu()
         )
     );
+}
+
+
+tmp<scalarField> twoPhaseMixtureI::mu(const label patchi) const
+{
+    return mu()().boundaryField()[patchi];
 }
 
 
@@ -177,7 +193,7 @@ tmp<surfaceScalarField> twoPhaseMixtureI::nuf() const
 
 bool twoPhaseMixtureI::read()
 {
-    if (transportModel::read())
+    if (regIOobject::read())
     {
         if
         (
@@ -190,15 +206,9 @@ bool twoPhaseMixtureI::read()
 
             return true;
         }
-        else
-        {
-            return false;
-        }
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
 

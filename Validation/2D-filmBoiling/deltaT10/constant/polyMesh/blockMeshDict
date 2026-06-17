@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 0.00115; // lc2d/2= 0.0023003957÷2
+scale 0.00115; // lc2d/2= 0.0023003957÷2
 
 vertices        
 (
@@ -44,11 +44,15 @@ patches
         (3 7 6 2)
     )
 
-   symmetryPlane walls
-   (
+    symmetryPlane wallLeft
+    (
         (0 4 7 3)
+    )
+
+    symmetryPlane wallRight
+    (
         (2 6 5 1)
-    ) 
+    )
 
     patch down 
     (

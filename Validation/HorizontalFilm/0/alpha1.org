@@ -34,7 +34,7 @@ boundaryField
    left
     {
 	type	fixedValue;
-	value	uniform 1.0
+	value	uniform 1.0;
     }
 
    frontAndBack 

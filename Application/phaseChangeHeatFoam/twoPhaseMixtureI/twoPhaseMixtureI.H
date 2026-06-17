@@ -40,6 +40,7 @@ SourceFiles
 
 #include "incompressible/transportModel/transportModel.H"
 #include "incompressible/viscosityModels/viscosityModel/viscosityModel.H"
+#include "IOdictionary.H"
 #include "dimensionedScalar.H"
 #include "volFields.H"
 
@@ -54,6 +55,7 @@ namespace Foam
 
 class twoPhaseMixtureI
 :
+    public IOdictionary,
     public transportModel
 {
 protected:
@@ -171,6 +173,9 @@ public:
         //- Return the dynamic laminar viscosity
         tmp<volScalarField> mu() const;
 
+        //- Return the dynamic laminar viscosity on patch
+        tmp<scalarField> mu(const label patchi) const;
+
         //- Return the face-interpolated dynamic laminar viscosity
         tmp<surfaceScalarField> muf() const;
 
@@ -178,6 +183,12 @@ public:
         virtual tmp<volScalarField> nu() const
         {
             return nu_;
+        }
+
+        //- Return the laminar viscosity for patch
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return nu_.boundaryField()[patchi];
         }
 
         //- Return the face-interpolated dynamic laminar viscosity

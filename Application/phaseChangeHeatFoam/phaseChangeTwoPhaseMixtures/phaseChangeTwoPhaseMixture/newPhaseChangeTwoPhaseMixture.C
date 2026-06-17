@@ -61,7 +61,7 @@ Foam::phaseChangeTwoPhaseMixture::New
     Info<< "Selecting phaseChange model "
         << phaseChangeTwoPhaseMixtureTypeName << endl;
 
-    componentsConstructorTable::iterator cstrIter =
+    auto cstrIter =
         componentsConstructorTablePtr_
             ->find(phaseChangeTwoPhaseMixtureTypeName);
 

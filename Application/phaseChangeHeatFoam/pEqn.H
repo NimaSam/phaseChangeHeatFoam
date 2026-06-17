@@ -11,7 +11,7 @@
     (
         "phiHbyA",
         (fvc::interpolate(HbyA) & mesh.Sf())
-       + fvc::ddtPhiCorr(rAU, rho, U, phi)
+       + fvc::interpolate(rho*rAU)*fvc::ddtCorr(U, phi)
     );
     adjustPhi(phiHbyA, U, p_rgh);
     phi = phiHbyA;
@@ -103,5 +103,4 @@
 
        mDotP = (mDotcP-mDotvP)*(p-pSat);
 }
-
 

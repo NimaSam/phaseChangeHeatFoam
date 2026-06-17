@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application                interPhaseChangeFoam;
+application                phaseChangeHeatFoam;
 
-startFrom                  latestTime;
+startFrom                  startTime;
 
 startTime                  0;
 
@@ -36,7 +36,7 @@ writeFormat                ascii;
 
 writePrecision             6;
 
-writeCompression           compressed;
+writeCompression           off;
 
 timeFormat                 general;
 
@@ -52,47 +52,10 @@ maxDeltaT       1E-05;
 
 libs (
     "libOpenFOAM.so" // keeps paraFoam happy
-    "libsimpleSwakFunctionObjects.so"  
 );
 
 functions
-(
-
-HeatCoef
 {
-type swakExpression;
-valueType patch;
-patchName down;
-verbose true;
-variables (
-	"Tsat=646;"
-	"KL=0.545;" //
-	);
-expression "KL*snGrad(T)";
-accumulations (
-        min
-	max
-        average
-	);
 }
-
-Nu
-{
-type swakExpression;
-valueType patch;
-patchName down;
-verbose true;
-variables (
-	"Tsat=646;"
-	);
-expression "(0.01-pos().y)*snGrad(T)/(T-Tsat+1E-08)";
-accumulations (
-        min
-	max
-        average
-	);
-}
-
-); 
 
 // ************************************************************************* //

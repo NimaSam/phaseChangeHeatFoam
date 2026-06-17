@@ -15,9 +15,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     interFoam;
+application     phaseChangeHeatFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -29,7 +29,7 @@ deltaT          1E-05;
 
 writeControl    adjustableRunTime;
 
-writeInterval   10;
+writeInterval   5;
 
 purgeWrite      0;
 
@@ -37,7 +37,7 @@ writeFormat     ascii;
 
 writePrecision  6;
 
-writeCompression compressed;
+writeCompression off;
 
 timeFormat      general;
 
@@ -53,62 +53,11 @@ maxAlphaCo      0.1;
 maxDeltaT      1E-05;
 libs (
     "libOpenFOAM.so" // keeps paraFoam happy
-    "libtwoPhaseInterfaceProperties.so"
     "libinterfaceProperties.so"
-    "libsimpleSwakFunctionObjects.so" 
-    "libswakFunctionObjects.so" 
 );
 
 functions
-(
-    createInterface
-    {
-        type createSampledSurface;
-        outputControl timeStep;
-        outputInterval 1;
-        surfaceName interface;
-        surface {
-            type isoSurface;
-            isoField alpha1;
-            isoValue 0.5;
-            interpolate true;
-        }
-    }
-    interfacePosition
-    {
-        type swakExpression;
-        valueType surface;
-        surfaceName interface;
-        verbose true;
-        expression "pos().x";
-        accumulations (
-            max
-        );      
-    }
-
-    interfaceVelocity
-    {
-        type swakExpression;
-        valueType surface;
-        surfaceName interface;
-        verbose true;
-        expression "mag(U)";
-        accumulations (
-            max
-        );        
-    }
-    
-    interfaceTemperature
-    {
-        type swakExpression;
-        valueType surface;
-        surfaceName interface;
-        verbose true;
-        expression "T";
-        accumulations (
-            max
-        );        
-    }
-);
+{
+}
 
 // ************************************************************************* //

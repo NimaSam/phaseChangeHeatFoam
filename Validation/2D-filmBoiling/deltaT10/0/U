@@ -27,7 +27,11 @@ boundaryField
 	//type		pressureInletVelocity;
 	//value		uniform (0 0 0);
     }
-    walls
+    wallLeft
+    {
+        type            symmetryPlane;
+    }
+    wallRight
     {
         type            symmetryPlane;
     }

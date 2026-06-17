@@ -43,9 +43,9 @@ Description
 #include "../smoothInterfaceProperties/smoothInterfaceProperties.H"
 #include "twoPhaseMixtureI/twoPhaseMixtureI.H"//add
 #include "phaseChangeTwoPhaseMixture.H"
-#include "turbulenceModel.H"
+#include "turbulentTransportModel.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H" //add
+#include "fvOptions.H" //add
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
+    #include "createTimeControls.H"
     #include "readTimeControls.H"
 
     pimpleControl pimple(mesh);

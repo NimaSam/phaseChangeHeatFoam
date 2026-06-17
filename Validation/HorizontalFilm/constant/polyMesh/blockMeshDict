@@ -13,7 +13,7 @@ FoamFile
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-convertToMeters 1E-05;
+scale 1E-05;
 
 xMin 0;
 xMax 66;

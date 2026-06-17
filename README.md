@@ -1,5 +1,5 @@
 # phaseChangeHeatFoam
-This is a solver for boiling and condensation which is written based on OpenFOAM-220 solver (interFoam).
+This is a solver for boiling and condensation which was originally written based on OpenFOAM-2.2.0 (interFoam) and has now been ported to OpenFOAM-v2412.
 ## key features
 * track interface using VOF method which is improved with Lafaurie smoothing filter
 * consider two mass transfer models (Lee and Tanasawa)
@@ -10,12 +10,17 @@ This is a solver for boiling and condensation which is written based on OpenFOAM
   (iv) the laminar film condensation over a vertical plate
 
 ## Installation
-It is working on OpenFOAM-2.2.0
+The current `master` branch targets OpenFOAM-v2412.
 ```bash
 git clone https://github.com/NimaSam/phaseChangeHeatFoam/
 cd phaseChangeHeatFoam/Application/
 chmod +x All*
 ./Allwmake
+```
+
+The original version compatible with the published paper is preserved as a tag:
+```bash
+git checkout openfoam-paper-version
 ```
 
 ## Documentation

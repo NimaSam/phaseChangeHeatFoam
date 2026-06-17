@@ -25,7 +25,11 @@ boundaryField
     {
       type            zeroGradient;
     }
-    walls
+    wallLeft
+    {
+        type            symmetryPlane;
+    }
+    wallRight
     {
         type            symmetryPlane;
     }

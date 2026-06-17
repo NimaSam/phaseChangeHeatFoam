@@ -54,15 +54,85 @@ EOF
 }
 
 
+# Extract alpha1=0.5 interface position from written time directories.
+python3 - <<'PY'
+from pathlib import Path
+import re
+
+case = Path('..')
+out = Path('interfacePosition.dat')
+
+def time_key(path):
+    try:
+        return float(path.name)
+    except ValueError:
+        return None
+
+def read_points():
+    text = (case/'constant/polyMesh/points').read_text(errors='ignore')
+    triples = re.findall(
+        r'\(([-+0-9.eE]+)\s+([-+0-9.eE]+)\s+([-+0-9.eE]+)\)',
+        text
+    )
+    xs = [float(x) for x, _, _ in triples]
+    return min(xs), max(xs)
+
+def read_alpha(path):
+    text = path.read_text(errors='ignore')
+    uniform = re.search(r'internalField\s+uniform\s+([-+0-9.eE]+)', text)
+    if uniform:
+        return [float(uniform.group(1))]
+
+    values = re.search(
+        r'internalField\s+nonuniform\s+List<scalar>\s+\d+\s*\((.*?)\)\s*;',
+        text,
+        re.S
+    )
+    if not values:
+        return []
+
+    return [
+        float(v)
+        for v in re.findall(r'[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?', values.group(1))
+    ]
+
+def interface_position(alpha, xmin, xmax):
+    if len(alpha) < 2:
+        return None
+
+    dx = (xmax - xmin)/len(alpha)
+    for i, (a0, a1) in enumerate(zip(alpha, alpha[1:])):
+        if (a0 - 0.5)*(a1 - 0.5) <= 0 and a0 != a1:
+            x0 = xmin + (i + 0.5)*dx
+            return x0 + (0.5 - a0)*dx/(a1 - a0)
+
+    return None
+
+xmin, xmax = read_points()
+rows = []
+for time_dir in sorted(case.iterdir(), key=lambda p: (time_key(p) is None, time_key(p) or 0)):
+    t = time_key(time_dir)
+    if t is None:
+        continue
+    alpha_file = time_dir/'alpha1'
+    if not alpha_file.is_file():
+        continue
+    pos = interface_position(read_alpha(alpha_file), xmin, xmax)
+    if pos is not None:
+        rows.append((t, pos))
+
+out.write_text(''.join(f'{t:g}\t{x:.10g}\n' for t, x in rows))
+PY
+
 # test if gnuplot exists on the system
-type -P gnuplot &>/dev/null || {
-    echo "gnuplot not found - skipping graph creation" >&2
-    exit 1
+command -v gnuplot >/dev/null 2>&1 || {
+    echo "gnuplot not found - wrote interfacePosition.dat only" >&2
+    exit 0
 }
 
 
 # paths to data
-OFDATAROOT=../swakExpression_interfacePosition/0/interfacePosition
+OFDATAROOT=./interfacePosition.dat
 
 EXPTDATAROOT=./ExactData/case1.csv
 
